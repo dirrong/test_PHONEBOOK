@@ -1,1 +1,1 @@
-839a43e85af9238afc7e2a4f7b0b89c2838c87f8906c18c56c251b54d507caba  phonebook.wasm
+f7dba1abb3aeb2d9a8f0649e7e66da15f96b17592a5ea1b4dfcafeca0eb8aa3a  phonebook.wasm

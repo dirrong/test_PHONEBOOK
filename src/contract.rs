@@ -13,7 +13,7 @@ const CONTRACT_NAME: &str = "crates.io:phonebook";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 */
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn instantiate(
     _deps: DepsMut,
     _env: Env,
@@ -59,7 +59,7 @@ fn execute_remove_number(deps: DepsMut, info: MessageInfo) -> Result<Response, C
 }
 
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn execute(
     deps: DepsMut,
     _env: Env,
@@ -72,7 +72,7 @@ pub fn execute(
     }
 }
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetNumber { address } => to_binary(&get_number(deps, address)?),
