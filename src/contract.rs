@@ -1,10 +1,10 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, to_binary};
 // use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, NumberResponse};
 use crate::state::PHONEBOOK;
 
 /*
@@ -20,7 +20,7 @@ pub fn instantiate(
     _info: MessageInfo,
     _msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    unimplemented!()
+    Ok(Response::default())
 }
 
 fn execute_add_number(
@@ -58,12 +58,6 @@ fn execute_remove_number(deps: DepsMut, info: MessageInfo) -> Result<Response, C
     }
 }
 
-// fn execute_find_number(deps: DepsMut, info: MessageInfo) -> Result<Response, ContractError> {
-//     let sender: Addr = info.sender.clone();
-//     if PHONEBOOK.has(dpes.storage, sender.clone()) {
-//         PHONEBOOK.
-//     }
-// }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
@@ -79,8 +73,18 @@ pub fn execute(
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(_deps: Deps, _env: Env, _msg: QueryMsg) -> StdResult<Binary> {
-    unimplemented!()
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::GetNumber { address } => to_binary(&get_number(deps, address)?),
+    }
+}
+
+fn get_number(deps: Deps, address: String) -> StdResult<NumberResponse> {
+    let address = deps.api.addr_validate(&address)?;
+    let number = PHONEBOOK
+        .may_load(deps.storage, address)?
+        .unwrap_or_default();
+    Ok(NumberResponse {number})
 }
 
 #[cfg(test)]
